@@ -10,16 +10,26 @@ func getJidFromMsgText(s string) string {
 		return ""
 	}
 
-	if !strings.HasPrefix(s, "JID: ") {
-		return ""
-	}
-
 	msgArray := strings.Split(s, "\n")
 	if len(msgArray) < 1 {
 		return ""
 	}
 
-	return strings.Trim(msgArray[0][5:], " ")
+	jid := strings.Trim(msgArray[0], " ")
+	if !strings.HasPrefix(jid, "JID: ") {
+		return ""
+	}
+
+	return jid[5:]
+}
+
+func getJidFromMessage(m *tg.Message) string {
+	jid := getJidFromMsgText(m.ReplyTo.Text)
+
+	if jid == "" {
+		return getJidFromMsgText(m.ReplyTo.Caption)
+	}
+	return jid
 }
 
 func sendTelegramTxt(str string) error {
@@ -29,4 +39,24 @@ func sendTelegramTxt(str string) error {
 		tg.NoPreview,
 		"Markdown")
 	return err
+}
+
+func isMsgNeedProcess(m *tg.Message) bool {
+	if m.Unixtime < startTime {
+		return false
+	}
+
+	if m.Chat.ID != chatId {
+		return false
+	}
+
+	if !m.IsReply() {
+		_, _ = bot.Send(
+			tg.ChatID(chatId),
+			"Only accept reply.",
+			tg.NoPreview,
+			"Markdown")
+		return false
+	}
+	return true
 }

@@ -133,13 +133,7 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 
 	transferState := "successfully"
 
-	errS := sendTelegramTxt(
-		fmt.Sprintf(
-			"JID: %s\nMSG: %s",
-			jid,
-			message.Text,
-		),
-	)
+	errS := sendTelegramTxt(message.Text)
 
 	if errS != nil {
 		fmt.Fprintf(os.Stderr, "Cannot send to TG")

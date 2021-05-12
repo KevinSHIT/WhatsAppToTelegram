@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"image"
 	"image/jpeg"
@@ -45,5 +46,28 @@ func savePic(imgByte []byte, path string) error {
 
 	err = jpeg.Encode(out, img, &opts)
 	return err
+}
+
+func fileToBytes(path string) []byte {
+	file, err := os.Open(path)
+
+	if err != nil {
+		return nil
+	}
+
+	defer file.Close()
+
+	fileInfo, _ := file.Stat()
+	size := fileInfo.Size()
+	bytesObj := make([]byte, size)
+
+	buffer := bufio.NewReader(file)
+	_, err = buffer.Read(bytesObj)
+
+	if err != nil {
+		return nil
+	}
+
+	return bytesObj
 
 }

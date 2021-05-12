@@ -27,6 +27,7 @@ func main() {
 		ShortClientName: waShortClientName,
 		LongClientName:  waLongClientName,
 	})
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating connection: %v\n", err)
 		return
@@ -44,31 +45,11 @@ func main() {
 
 	/* FIXED: seems not work */
 	bot.Handle(tg.OnText, func(m *tg.Message) {
-		if m.Unixtime < startTime {
+		if !isMsgNeedProcess(m) {
 			return
 		}
 
-		if m.Chat.ID != chatId {
-			return
-		}
-
-		if !m.IsReply() {
-			_, _ = bot.Send(
-				tg.ChatID(chatId),
-				"Only accept reply.",
-				tg.NoPreview,
-				"Markdown")
-			return
-		}
-
-		jid := getJidFromMsgText(m.ReplyTo.Text)
-
-		if jid == "" {
-			jid = getJidFromMsgText(m.ReplyTo.Caption)
-			if jid == "" {
-				return
-			}
-		}
+		jid := getJidFromMessage(m)
 
 		msg := whatsapp.TextMessage{
 			Info: whatsapp.MessageInfo{
@@ -80,6 +61,33 @@ func main() {
 		if _, err := wac.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
+	})
+
+	bot.Handle(tg.OnPhoto, func(m *tg.Message) {
+		if !isMsgNeedProcess(m) {
+			return
+		}
+
+		imgPath := m.Photo.FilePath
+		imgBytes := fileToBytes(imgPath)
+
+		if imgBytes == nil {
+			// TODO: Invalid Bytes
+			return
+		}
+
+		jid := getJidFromMessage(m)
+
+		msg := whatsapp.ImageMessage{
+			Info: whatsapp.MessageInfo{
+				RemoteJid: jid,
+			},
+			Thumbnail: imgBytes,
+		}
+		if _, err := wac.Send(msg); err != nil {
+			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
+		}
+
 	})
 
 	go bot.Start()
