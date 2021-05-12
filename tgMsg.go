@@ -10,17 +10,16 @@ func getJidFromMsgText(s string) string {
 		return ""
 	}
 
+	if !strings.HasPrefix(s, "JID: ") {
+		return ""
+	}
+
 	msgArray := strings.Split(s, "\n")
 	if len(msgArray) < 1 {
 		return ""
 	}
 
-	jid := strings.Trim(msgArray[0], " ")
-	if !strings.HasPrefix(jid, "JID: ") {
-		return ""
-	}
-
-	return jid[5:]
+	return strings.Trim(msgArray[0][5:], " ")
 }
 
 func sendTelegramTxt(str string) error {
