@@ -14,6 +14,9 @@ var (
 			},
 		},
 	)
-	chatId int64 = 0
-	startTime = time.Now().Unix()
+	chatId            int64 = 0
+	startTime               = time.Now().Unix()
+	waShortClientName       = ""
+	waLongClientName        = ""
+	waTimeout               = 20 * time.Second
 )

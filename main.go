@@ -22,7 +22,11 @@ func main() {
 		"Markdown",
 	)
 
-	wac, err := whatsapp.NewConn(20 * time.Second)
+	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
+		Timeout:         waTimeout,
+		ShortClientName: waShortClientName,
+		LongClientName:  waLongClientName,
+	})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating connection: %v\n", err)
 		return
