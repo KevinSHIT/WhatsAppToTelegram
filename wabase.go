@@ -66,3 +66,24 @@ func writeSession(session whatsapp.Session) error {
 	}
 	return nil
 }
+
+func getJid(info whatsapp.MessageInfo) string {
+	if info.Source.Participant == nil {
+		return info.RemoteJid
+	} else {
+		return *info.Source.Participant
+	}
+}
+
+func sendWhatsAppTxtMsg(wh *waHandler, jid, text string) {
+	msg := whatsapp.TextMessage{
+		Info: whatsapp.MessageInfo{
+			RemoteJid: jid,
+		},
+		Text: text,
+	}
+
+	if _, err := wh.wac.Send(msg); err != nil {
+		fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
+	}
+}

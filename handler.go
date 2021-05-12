@@ -17,14 +17,6 @@ func (wh *waHandler) HandleError(err error) {
 	fmt.Fprintf(os.Stderr, "error caught in handler: %v\n", err)
 }
 
-func getJid(info whatsapp.MessageInfo) string {
-	if info.Source.Participant == nil {
-		return info.RemoteJid
-	} else {
-		return *info.Source.Participant
-	}
-}
-
 func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	if message.Info.FromMe || message.Info.Timestamp < wh.startTime {
 		return
@@ -72,18 +64,12 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 
-	msg := whatsapp.TextMessage{
-		Info: whatsapp.MessageInfo{
-			RemoteJid: message.Info.RemoteJid,
-		},
-		Text: fmt.Sprintf(
+	sendWhatsAppTxtMsg(
+		wh,
+		message.Info.RemoteJid,
+		fmt.Sprintf(
 			"Message transferred %s. More info please text .help",
 			transferState,
 		),
-	}
-
-	if _, err := wh.wac.Send(msg); err != nil {
-		fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
-
-	}
+	)
 }
