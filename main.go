@@ -44,7 +44,7 @@ func main() {
 			return
 		}
 
-		if m.Chat.ID != 573387497 {
+		if m.Chat.ID != chatId {
 			return
 		}
 
