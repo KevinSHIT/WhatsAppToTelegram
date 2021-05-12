@@ -60,8 +60,12 @@ func main() {
 		jid := getJidFromMsgText(m.ReplyTo.Text)
 
 		if jid == "" {
-			return
+			jid = getJidFromMsgText(m.ReplyTo.Caption)
+			if jid == "" {
+				return
+			}
 		}
+
 		msg := whatsapp.TextMessage{
 			Info: whatsapp.MessageInfo{
 				RemoteJid: jid,
