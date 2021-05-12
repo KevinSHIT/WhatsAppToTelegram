@@ -81,7 +81,7 @@ func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
 	_, err = bot.Send(
 		tg.ChatID(chatId),
 		&tg.Photo{
-			File: tg.FromDisk(imgPath),
+			File:    tg.FromDisk(imgPath),
 			Caption: "JID: " + jid,
 		},
 	)
@@ -133,7 +133,13 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 
 	transferState := "successfully"
 
-	errS := sendTelegramTxt(message.Text)
+	errS := sendTelegramTxt(
+		fmt.Sprintf(
+			"JID: %s\nMSG: %s",
+			jid,
+			message.Text,
+		),
+	)
 
 	if errS != nil {
 		fmt.Fprintf(os.Stderr, "Cannot send to TG")
