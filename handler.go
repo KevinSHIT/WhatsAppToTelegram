@@ -17,17 +17,20 @@ func (wh *waHandler) HandleError(err error) {
 	fmt.Fprintf(os.Stderr, "error caught in handler: %v\n", err)
 }
 
+func getJid(info whatsapp.MessageInfo) string {
+	if info.Source.Participant == nil {
+		return info.RemoteJid
+	} else {
+		return *info.Source.Participant
+	}
+}
+
 func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	if message.Info.FromMe || message.Info.Timestamp < wh.startTime {
 		return
 	}
 
-	var jid string
-	if message.Info.Source.Participant == nil {
-		jid = message.Info.RemoteJid
-	} else {
-		jid = *message.Info.Source.Participant
-	}
+	jid := getJid(message.Info)
 
 	msgStr := fmt.Sprintf(
 		"JID: %s\nMsg: %s\n",

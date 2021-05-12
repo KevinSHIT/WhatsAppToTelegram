@@ -54,7 +54,7 @@ func main() {
 			return
 		}
 
-		jid := getJid(m.ReplyTo.Text)
+		jid := getJidFromMsgText(m.ReplyTo.Text)
 		fmt.Println(jid)
 		if jid == "" {
 			return

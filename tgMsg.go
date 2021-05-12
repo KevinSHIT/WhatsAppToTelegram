@@ -2,7 +2,7 @@ package main
 
 import "strings"
 
-func getJid(s string) string {
+func getJidFromMsgText(s string) string {
 	if s == "" {
 		return ""
 	}
