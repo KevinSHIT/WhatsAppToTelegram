@@ -28,22 +28,22 @@ chmod +x WhatsAppToTelegram
 
 ## Functions Work
 
--[ ] WhatsApp -> Telegram
-  -[x] Text Message
-  -[x] Image Message
-  -[ ] Document Message
-  -[ ] Video Message
-  -[ ] Audio Message
-  -[ ] ~~Json Message~~
-  -[ ] Contact Message
-  -[ ] ~~Battery Message~~
-  -[ ] New Contact
--[ ] Telegram -> WhatsApp
-  -[x] Text Message
-  -[ ] Photo Message
-  -[ ] Document Message
-  -[ ] ~~Video Message~~
-  -[ ] Voice Message
+- [ ] WhatsApp -> Telegram
+  - [x] Text Message
+  - [x] Image Message
+  - [ ] Document Message
+  - [ ] Video Message
+  - [ ] Audio Message
+  - [ ] ~~Json Message~~
+  - [ ] Contact Message
+  - [ ] ~~Battery Message~~
+  - [ ] New Contact
+- [ ] Telegram -> WhatsApp
+  - [x] Text Message
+  - [ ] Photo Message
+  - [ ] Document Message
+  - [ ] ~~Video Message~~
+  - [ ] Voice Message
 
 ## Credits
 
