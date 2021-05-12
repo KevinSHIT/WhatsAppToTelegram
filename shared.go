@@ -9,7 +9,7 @@ var (
 	bot, Kerr = tg.NewBot(
 		tg.Settings{
 			Token: "",
-			Poller: &tg.LongPoller {
+			Poller: &tg.LongPoller{
 				Timeout: 5 * time.Second,
 			},
 		},

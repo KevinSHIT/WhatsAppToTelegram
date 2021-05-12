@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	tg "gopkg.in/tucnak/telebot.v2"
+	"strings"
+)
 
 func getJidFromMsgText(s string) string {
 	if s == "" {
@@ -17,5 +20,14 @@ func getJidFromMsgText(s string) string {
 		return ""
 	}
 
-	return  s[5:]
+	return s[5:]
+}
+
+func sendTelegramTxt(str string) error {
+	_, err := bot.Send(
+		tg.ChatID(chatId),
+		str,
+		tg.NoPreview,
+		"Markdown")
+	return err
 }
