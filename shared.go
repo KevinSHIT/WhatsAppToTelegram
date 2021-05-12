@@ -16,7 +16,7 @@ var (
 	)
 	chatId            int64 = 0
 	startTime               = time.Now().Unix()
-	waShortClientName       = ""
-	waLongClientName        = ""
+	waShortClientName       = "KevinZonda's Workstation"
+	waLongClientName        = "KevinZonda"
 	waTimeout               = 20 * time.Second
 )
