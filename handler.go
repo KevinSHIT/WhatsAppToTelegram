@@ -46,6 +46,10 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		tg.NoPreview,
 		"Markdown")
 
+	if strings.Contains(jid, "-") {
+		return
+	}
+
 	transferState := "successfully"
 
 	if errS != nil {
@@ -53,34 +57,33 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		transferState = "failed"
 	}
 
-	if !strings.Contains(jid, "-") {
-		if strings.HasPrefix(message.Text, ".") {
-			msg := whatsapp.TextMessage{
-				Info: whatsapp.MessageInfo{
-					RemoteJid: message.Info.RemoteJid,
-				},
-				Text: getResponse(message.Text),
-			}
-
-			if _, err := wh.wac.Send(msg); err != nil {
-				fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
-			}
-
-			return
-		}
-
+	if strings.HasPrefix(message.Text, ".") {
 		msg := whatsapp.TextMessage{
 			Info: whatsapp.MessageInfo{
 				RemoteJid: message.Info.RemoteJid,
 			},
-			Text: fmt.Sprintf(
-				"Message transferred %s. More info please text .help",
-				transferState,
-			),
+			Text: getResponse(message.Text),
 		}
 
 		if _, err := wh.wac.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
+
+		return
+	}
+
+	msg := whatsapp.TextMessage{
+		Info: whatsapp.MessageInfo{
+			RemoteJid: message.Info.RemoteJid,
+		},
+		Text: fmt.Sprintf(
+			"Message transferred %s. More info please text .help",
+			transferState,
+		),
+	}
+
+	if _, err := wh.wac.Send(msg); err != nil {
+		fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
+
 	}
 }
