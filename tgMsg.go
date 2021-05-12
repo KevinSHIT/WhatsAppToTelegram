@@ -20,7 +20,7 @@ func getJidFromMsgText(s string) string {
 		return ""
 	}
 
-	return s[5:]
+	return jid[5:]
 }
 
 func sendTelegramTxt(str string) error {
