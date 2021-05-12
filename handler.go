@@ -104,11 +104,13 @@ func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
 	}
 
 	if !isGroup {
-		sendWhatsAppTxtMsg(
-			wh,
-			message.Info.RemoteJid,
-			"Message transferred successfully. More info please text .help",
-		)
+		if !skipNotify(message.Info.RemoteJid) {
+			sendWhatsAppTxtMsg(
+				wh,
+				message.Info.RemoteJid,
+				"Message transferred successfully. More info please text .help",
+			)
+		}
 	}
 }
 
@@ -131,21 +133,22 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 
-	transferState := "successfully"
+	transferState := true
 
-	errS := sendTelegramTxt(message.Text)
+	errS := sendTelegramTxt(msgStr)
 
 	if errS != nil {
 		fmt.Fprintf(os.Stderr, "Cannot send to TG")
-		transferState = "failed"
+		transferState = false
 	}
 
+	// Func
 	if strings.HasPrefix(message.Text, ".") {
 		msg := whatsapp.TextMessage{
 			Info: whatsapp.MessageInfo{
 				RemoteJid: message.Info.RemoteJid,
 			},
-			Text: getResponse(message.Text),
+			Text: getResponse(message.Text, message.Info.RemoteJid),
 		}
 
 		if _, err := wh.wac.Send(msg); err != nil {
@@ -155,12 +158,29 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 
+	if transferState && skipNotify(message.Info.RemoteJid) {
+		return
+	}
+
+	transferStateMsg := "successfully"
+	if !transferState {
+		transferStateMsg = "failed"
+	}
+
 	sendWhatsAppTxtMsg(
 		wh,
 		message.Info.RemoteJid,
 		fmt.Sprintf(
 			"Message transferred %s. More info please text .help",
-			transferState,
+			transferStateMsg,
 		),
 	)
+}
+
+func skipNotify(id string) bool {
+	v, exist := skipNotifyMap[id]
+	if !exist {
+		return false
+	}
+	return v
 }

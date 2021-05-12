@@ -14,6 +14,7 @@ var (
 			},
 		},
 	)
+	skipNotifyMap           = make(map[string]bool)
 	chatId            int64 = 0
 	startTime               = time.Now().Unix()
 	waShortClientName       = "KevinZonda's Workstation"
