@@ -15,4 +15,5 @@ var (
 		},
 	)
 	chatId int64 = 0
+	startTime = time.Now().Unix()
 )

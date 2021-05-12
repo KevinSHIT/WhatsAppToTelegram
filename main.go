@@ -38,13 +38,16 @@ func main() {
 		return
 	}
 
-	/* FIXME: seems not work */
+	/* FIXED: seems not work */
 	bot.Handle(tg.OnText, func(m *tg.Message) {
-		fmt.Println(m.Text)
+		if m.Unixtime < startTime {
+			return
+		}
+
 		if m.Chat.ID != 573387497 {
 			return
 		}
-		println(m.IsReply())
+
 		if !m.IsReply() {
 			_, _ = bot.Send(
 				tg.ChatID(chatId),
@@ -55,7 +58,7 @@ func main() {
 		}
 
 		jid := getJidFromMsgText(m.ReplyTo.Text)
-		fmt.Println(jid)
+
 		if jid == "" {
 			return
 		}
@@ -71,5 +74,6 @@ func main() {
 		}
 	})
 
+	go bot.Start()
 	<-time.After(360 * 24 * time.Hour)
 }
