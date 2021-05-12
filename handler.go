@@ -78,10 +78,12 @@ func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
 		return
 	}
 
-	tgImg := &tg.Photo{File: tg.FromDisk(imgPath)}
 	_, err = bot.Send(
 		tg.ChatID(chatId),
-		tgImg,
+		&tg.Photo{
+			File: tg.FromDisk(imgPath),
+			Caption: "JID: " + jid,
+		},
 	)
 
 	if err != nil {
