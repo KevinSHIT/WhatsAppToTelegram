@@ -19,7 +19,7 @@ func getResponse(msg string, jid string) string {
 			".setnotify [false|true] Set the notify which after transferring. If the forward is failed, the notify will still be sent."
 	}
 	if strings.HasPrefix(strings.ToLower(msg), ".setnotify") {
-		b, err := strconv.ParseBool(strings.Trim(msg[10:], "x"))
+		b, err := strconv.ParseBool(strings.Trim(msg[10:], " "))
 		if err != nil {
 			return "ERR: WA_P_TYPECOV"
 		}
