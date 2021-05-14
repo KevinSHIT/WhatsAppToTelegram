@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var err error
-	bot, err = tg.NewBot(
+	tgBot, err = tg.NewBot(
 		tg.Settings{
 			Token: tgToken,
 			Poller: &tg.LongPoller{
@@ -25,14 +25,14 @@ func main() {
 		return
 	}
 
-	_, _ = bot.Send(
-		tg.ChatID(chatId),
+	_, _ = tgBot.Send(
+		tg.ChatID(tgChatId),
 		fmt.Sprintf("Bot is connected"),
 		tg.NoPreview,
 		"Markdown",
 	)
 
-	whatsConn, err = whatsapp.NewConnWithOptions(&whatsapp.Options{
+	waConn, err = whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         waTimeout,
 		ShortClientName: waShortClientName,
 		LongClientName:  waLongClientName,
@@ -43,18 +43,18 @@ func main() {
 		return
 	}
 
-	whatsConn.AddHandler(&waHandler{
-		whatsConn,
+	waConn.AddHandler(&waHandler{
+		waConn,
 		uint64(time.Now().Unix()),
 	})
 
-	if err = login(whatsConn); err != nil {
+	if err = login(waConn); err != nil {
 		fmt.Fprintf(os.Stderr, "error logging in: %v\n", err)
 		return
 	}
 
 	/* FIXED: seems not work */
-	bot.Handle(tg.OnText, func(m *tg.Message) {
+	tgBot.Handle(tg.OnText, func(m *tg.Message) {
 		if !isMsgNeedProcess(m) {
 			return
 		}
@@ -68,12 +68,12 @@ func main() {
 			Text: m.Text,
 		}
 
-		if _, err := whatsConn.Send(msg); err != nil {
+		if _, err := waConn.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
 	})
 
-	bot.Handle(tg.OnPhoto, func(m *tg.Message) {
+	tgBot.Handle(tg.OnPhoto, func(m *tg.Message) {
 		if !isMsgNeedProcess(m) {
 			return
 		}
@@ -94,12 +94,12 @@ func main() {
 			},
 			Thumbnail: imgBytes,
 		}
-		if _, err := whatsConn.Send(msg); err != nil {
+		if _, err := waConn.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
 
 	})
 
-	go bot.Start()
+	go tgBot.Start()
 	<-time.After(360 * 24 * time.Hour)
 }

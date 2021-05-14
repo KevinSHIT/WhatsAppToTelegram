@@ -7,13 +7,14 @@ import (
 )
 
 var (
-	whatsConn         *whatsapp.Conn
-	bot               *tg.Bot
-	tgToken                 = ""
-	skipNotifyMap           = make(map[string]bool)
-	chatId            int64 = 0
-	startTime               = time.Now().Unix()
-	waShortClientName       = "KevinZonda's Workstation"
-	waLongClientName        = "KevinZonda"
-	waTimeout               = 20 * time.Second
+	tgChatId      int64 = 0
+	tgBot         *tg.Bot
+	tgToken       = ""
+	skipNotifyMap = make(map[string]bool)
+	startTime     = time.Now().Unix()
+
+	waConn            *whatsapp.Conn
+	waShortClientName = "KevinZonda's Workstation"
+	waLongClientName  = "KevinZonda"
+	waTimeout         = 20 * time.Second
 )

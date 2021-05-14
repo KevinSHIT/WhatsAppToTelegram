@@ -33,8 +33,8 @@ func getJidFromMessage(m *tg.Message) string {
 }
 
 func sendTelegramTxt(str string) error {
-	_, err := bot.Send(
-		tg.ChatID(chatId),
+	_, err := tgBot.Send(
+		tg.ChatID(tgChatId),
 		str,
 		tg.NoPreview,
 		"Markdown")
@@ -46,13 +46,13 @@ func isMsgNeedProcess(m *tg.Message) bool {
 		return false
 	}
 
-	if m.Chat.ID != chatId {
+	if m.Chat.ID != tgChatId {
 		return false
 	}
 
 	if !m.IsReply() {
-		_, _ = bot.Send(
-			tg.ChatID(chatId),
+		_, _ = tgBot.Send(
+			tg.ChatID(tgChatId),
 			"Only accept reply.",
 			tg.NoPreview,
 			"Markdown")

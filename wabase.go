@@ -75,7 +75,7 @@ func getJid(info whatsapp.MessageInfo) string {
 	}
 }
 
-func sendWhatsAppTxtMsg (wh *waHandler, jid, text string) {
+func sendWhatsAppTxtMsg(wh *waHandler, jid, text string) {
 	msg := whatsapp.TextMessage{
 		Info: whatsapp.MessageInfo{
 			RemoteJid: jid,
