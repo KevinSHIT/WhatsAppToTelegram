@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	bot, Kerr := tg.NewBot(
+	var err error
+	bot, err = tg.NewBot(
 		tg.Settings{
 			Token: tgToken,
 			Poller: &tg.LongPoller{
@@ -19,8 +20,8 @@ func main() {
 		},
 	)
 
-	if Kerr != nil {
-		fmt.Fprintf(os.Stderr, "error creating tg connection: %v\n", Kerr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error creating tg connection: %v\n", err)
 		return
 	}
 
@@ -31,7 +32,7 @@ func main() {
 		"Markdown",
 	)
 
-	wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
+	whatsConn, err = whatsapp.NewConnWithOptions(&whatsapp.Options{
 		Timeout:         waTimeout,
 		ShortClientName: waShortClientName,
 		LongClientName:  waLongClientName,
@@ -42,12 +43,12 @@ func main() {
 		return
 	}
 
-	wac.AddHandler(&waHandler{
-		wac,
+	whatsConn.AddHandler(&waHandler{
+		whatsConn,
 		uint64(time.Now().Unix()),
 	})
 
-	if err = login(wac); err != nil {
+	if err = login(whatsConn); err != nil {
 		fmt.Fprintf(os.Stderr, "error logging in: %v\n", err)
 		return
 	}
@@ -67,7 +68,7 @@ func main() {
 			Text: m.Text,
 		}
 
-		if _, err := wac.Send(msg); err != nil {
+		if _, err := whatsConn.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
 	})
@@ -93,7 +94,7 @@ func main() {
 			},
 			Thumbnail: imgBytes,
 		}
-		if _, err := wac.Send(msg); err != nil {
+		if _, err := whatsConn.Send(msg); err != nil {
 			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
 		}
 
