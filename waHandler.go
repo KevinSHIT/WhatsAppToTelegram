@@ -1,6 +1,7 @@
 package main
 
 import (
+	"WhatsAppToTelegram/utils"
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
 	tg "gopkg.in/tucnak/telebot.v2"
@@ -27,17 +28,17 @@ func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
 
 	isGroup := strings.Contains(jid, "-")
 
-	if !Exists("cache") {
+	if !utils.Exists("cache") {
 		os.Mkdir("cache", os.ModePerm)
 	}
 
-	imgPath := path.Join("cache", RandStringBytes(10)+".jpg")
+	imgPath := path.Join("cache", utils.RandStringBytes(10)+".jpg")
 
 	for {
-		if !Exists(imgPath) {
+		if !utils.Exists(imgPath) {
 			break
 		}
-		imgPath = path.Join("cache", RandStringBytes(10)+".jpg")
+		imgPath = path.Join("cache", utils.RandStringBytes(10)+".jpg")
 	}
 
 	img, err := message.Download()
@@ -58,7 +59,7 @@ func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
 		return
 	}
 
-	err = savePic(img, imgPath)
+	err = utils.SavePic(img, imgPath)
 	defer os.Remove(imgPath)
 
 	if err != nil {

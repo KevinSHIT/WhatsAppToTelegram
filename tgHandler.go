@@ -1,6 +1,7 @@
 package main
 
 import (
+	"WhatsAppToTelegram/utils"
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
 	tg "gopkg.in/tucnak/telebot.v2"
@@ -32,7 +33,7 @@ func tgOnPhoto(m *tg.Message) {
 	}
 
 	imgPath := m.Photo.FilePath
-	imgBytes := fileToBytes(imgPath)
+	imgBytes := utils.FileToBytes(imgPath)
 
 	if imgBytes == nil {
 		// TODO: Invalid Bytes

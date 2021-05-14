@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"bufio"
@@ -31,7 +31,7 @@ func IsFile(path string) bool {
 	return !IsDir(path)
 }
 
-func savePic(imgByte []byte, path string) error {
+func SavePic(imgByte []byte, path string) error {
 
 	img, _, err := image.Decode(bytes.NewReader(imgByte))
 	if err != nil {
@@ -48,7 +48,7 @@ func savePic(imgByte []byte, path string) error {
 	return err
 }
 
-func fileToBytes(path string) []byte {
+func FileToBytes(path string) []byte {
 	file, err := os.Open(path)
 
 	if err != nil {
