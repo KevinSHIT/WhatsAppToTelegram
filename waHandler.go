@@ -2,6 +2,7 @@ package main
 
 import (
 	"WhatsAppToTelegram/utils"
+	"errors"
 	"fmt"
 	"github.com/Rhymen/go-whatsapp"
 	tg "gopkg.in/tucnak/telebot.v2"
@@ -17,11 +18,21 @@ type waHandler struct {
 
 func (wh *waHandler) HandleError(err error) {
 	fmt.Fprintf(os.Stderr, "error caught in handler: %v\n", err)
+
+	var errHandle error
+
+	// Refer: https://github.com/Rhymen/go-whatsapp/issues/476
 	if strings.Contains(err.Error(), "code: 1000") {
-		errC := waConn.Restore()
-		if errC != nil {
-			fmt.Fprintf(os.Stderr, "error caught in handler: <Restore> %v\n", err)
-		}
+		errHandle = waConn.Restore()
+	}
+	//
+	if strings.Contains(err.Error(), "read: connection reset by peer") {
+		errHandle = errors.New("a new device used the web, so log out")
+	}
+
+	if errHandle != nil {
+		fmt.Fprintf(os.Stderr, "error cannot be solved: %v\n", err)
+		sendTelegramTxt(fmt.Sprintf("WhatsApp client is offline: %v", err))
 	}
 }
 
