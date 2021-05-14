@@ -10,9 +10,9 @@ Before all, you should install the Go. **Go 1.16.3+** is recommended (cuz I only
 
 Then modify the information inside the `shared.go` to yours.
 
-- `Token: ""`  
+- `tgToken: ""`  
 Modify to your Telegram bot token. If you don't have one, ask [@BotFather](https://t.me/BotFather).
-- `chatId = 0`  
+- `tgChatId = 0`  
 Modify to your Telegram ChatID. If you are not sure about your chatId, use [@userinfobot](https://t.me/userinfobot).
 The first line starts with `Id` will be your chatId.
 
