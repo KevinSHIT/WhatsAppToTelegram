@@ -53,52 +53,9 @@ func main() {
 		return
 	}
 
-	/* FIXED: seems not work */
-	tgBot.Handle(tg.OnText, func(m *tg.Message) {
-		if !isMsgNeedProcess(m) {
-			return
-		}
+	tgBot.Handle(tg.OnText, tgOnText)
 
-		jid := getJidFromMessage(m)
-
-		msg := whatsapp.TextMessage{
-			Info: whatsapp.MessageInfo{
-				RemoteJid: jid,
-			},
-			Text: m.Text,
-		}
-
-		if _, err := waConn.Send(msg); err != nil {
-			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
-		}
-	})
-
-	tgBot.Handle(tg.OnPhoto, func(m *tg.Message) {
-		if !isMsgNeedProcess(m) {
-			return
-		}
-
-		imgPath := m.Photo.FilePath
-		imgBytes := fileToBytes(imgPath)
-
-		if imgBytes == nil {
-			// TODO: Invalid Bytes
-			return
-		}
-
-		jid := getJidFromMessage(m)
-
-		msg := whatsapp.ImageMessage{
-			Info: whatsapp.MessageInfo{
-				RemoteJid: jid,
-			},
-			Thumbnail: imgBytes,
-		}
-		if _, err := waConn.Send(msg); err != nil {
-			fmt.Fprintf(os.Stderr, "error sending message: %v\n", err)
-		}
-
-	})
+	tgBot.Handle(tg.OnPhoto, tgOnPhoto)
 
 	go tgBot.Start()
 	<-time.After(360 * 24 * time.Hour)
