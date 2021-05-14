@@ -6,15 +6,17 @@ import (
 	"time"
 )
 
+const (
+	tgChatId          int64 = 0
+	tgToken                 = ""
+	waShortClientName       = "KevinZonda's Workstation"
+	waLongClientName        = "KevinZonda"
+	waTimeout               = 20 * time.Second
+)
+
 var (
-	tgChatId      int64 = 0
 	tgBot         *tg.Bot
-	tgToken       = ""
 	skipNotifyMap = make(map[string]bool)
 	startTime     = time.Now().Unix()
-
-	waConn            *whatsapp.Conn
-	waShortClientName = "KevinZonda's Workstation"
-	waLongClientName  = "KevinZonda"
-	waTimeout         = 20 * time.Second
+	waConn        *whatsapp.Conn
 )
