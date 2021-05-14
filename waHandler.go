@@ -17,6 +17,12 @@ type waHandler struct {
 
 func (wh *waHandler) HandleError(err error) {
 	fmt.Fprintf(os.Stderr, "error caught in handler: %v\n", err)
+	if strings.Contains(err.Error(), "code: 1000") {
+		errC := waConn.Restore()
+		if errC != nil {
+			fmt.Fprintf(os.Stderr, "error caught in handler: <Restore> %v\n", err)
+		}
+	}
 }
 
 func (wh *waHandler) HandleImageMessage(message whatsapp.ImageMessage) {
