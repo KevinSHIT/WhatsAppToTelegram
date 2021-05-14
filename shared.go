@@ -6,14 +6,8 @@ import (
 )
 
 var (
-	bot, Kerr = tg.NewBot(
-		tg.Settings{
-			Token: "",
-			Poller: &tg.LongPoller{
-				Timeout: 5 * time.Second,
-			},
-		},
-	)
+	bot               *tg.Bot
+	tgToken                 = ""
 	skipNotifyMap           = make(map[string]bool)
 	chatId            int64 = 0
 	startTime               = time.Now().Unix()

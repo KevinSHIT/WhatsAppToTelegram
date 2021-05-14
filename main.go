@@ -10,6 +10,15 @@ import (
 )
 
 func main() {
+	bot, Kerr := tg.NewBot(
+		tg.Settings{
+			Token: tgToken,
+			Poller: &tg.LongPoller{
+				Timeout: 5 * time.Second,
+			},
+		},
+	)
+
 	if Kerr != nil {
 		fmt.Fprintf(os.Stderr, "error creating tg connection: %v\n", Kerr)
 		return
